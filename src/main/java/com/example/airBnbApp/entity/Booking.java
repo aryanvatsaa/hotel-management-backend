@@ -4,22 +4,26 @@ package com.example.airBnbApp.entity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import com.example.airBnbApp.entity.enums.BookingStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter 
 @Setter
+@Builder 
+@AllArgsConstructor 
+@NoArgsConstructor
 public class Booking {
 
     @Id
@@ -52,10 +56,6 @@ public class Booking {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,5 +68,8 @@ public class Booking {
         inverseJoinColumns = @JoinColumn(name = "guest_id")
     )
     private Set<Guest> guests;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
 
 }
