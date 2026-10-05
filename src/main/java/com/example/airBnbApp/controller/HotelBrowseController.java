@@ -1,6 +1,6 @@
 package com.example.airBnbApp.controller;
 
-import com.example.airBnbApp.dto.HotelDto;
+import com.example.airBnbApp.dto.HotelPriceDto;
 import com.example.airBnbApp.dto.HotelInfoDto;
 import com.example.airBnbApp.dto.HotelSearchRequest;
 import com.example.airBnbApp.service.HotelService;
@@ -23,8 +23,8 @@ public class HotelBrowseController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
-        Page<HotelDto> page = inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
+        var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
 

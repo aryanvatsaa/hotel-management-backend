@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -54,5 +57,6 @@ public class Hotel {
     private User owner;
 
     @OneToMany(mappedBy = "hotel")
+    @JsonIgnore 
     private List<Room> rooms;
 }
