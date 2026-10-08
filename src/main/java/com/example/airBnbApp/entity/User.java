@@ -1,6 +1,13 @@
 package com.example.airBnbApp.entity;
 
+import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.airBnbApp.entity.enums.Roles;
 import jakarta.persistence.Entity;
@@ -21,7 +28,7 @@ import jakarta.persistence.Column;
 @Getter 
 @Setter
 @Table(name = "app_user")
-public class User {
+public class User implements UserDetails{
 
 
     @Id
@@ -39,4 +46,28 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Roles> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override 
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof User user)) return false;
+        return Objects.equals(getId(), user.getId());
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hashCode(getId());
+    }
 }

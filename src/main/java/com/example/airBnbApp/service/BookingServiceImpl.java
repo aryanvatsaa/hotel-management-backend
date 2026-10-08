@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ import com.example.airBnbApp.repository.HotelRepository;
 import com.example.airBnbApp.repository.InventoryRepository;
 import com.example.airBnbApp.repository.RoomRepository;
 import com.example.airBnbApp.repository.GuestRepository;
+import com.example.airBnbApp.exception.UnAuthorisedException;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +101,11 @@ public class BookingServiceImpl implements BookingService{
 
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() ->
             new ResourceNotFoundException("Booking not found with id : "+bookingId));
+        User user = getCurrentUser();
+
+        if (!user.equals(booking.getUser())) {
+            throw new UnAuthorisedException("Booking does not belongs to this user with id "+user.getId());
+        }
 
         if (hasBookingExpired(booking)) {
             throw new IllegalStateException("Booking has already Expried!!");
@@ -109,7 +117,7 @@ public class BookingServiceImpl implements BookingService{
 
         for(GuestDto guestDto: guestDtoList){
             Guest guest = modelMapper.map(guestDto, Guest.class);
-            guest.setUser(getCurrentUser());
+            guest.setUser(user);
             guest = guestRepository.save(guest);
             booking.getGuests().add(guest);
         }
@@ -125,8 +133,6 @@ public class BookingServiceImpl implements BookingService{
     }
    
     public User getCurrentUser() {
-        User user = new User();
-        user.setId(1L);       // TODO : REMOVE DUMMY USER
-        return user;
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

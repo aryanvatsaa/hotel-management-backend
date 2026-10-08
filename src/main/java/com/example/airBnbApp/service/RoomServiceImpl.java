@@ -3,14 +3,18 @@ package com.example.airBnbApp.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.airBnbApp.entity.Hotel;
 import com.example.airBnbApp.entity.Room;
 import com.example.airBnbApp.dto.RoomDto;
 import com.example.airBnbApp.repository.RoomRepository;
+import com.example.airBnbApp.entity.User;
+
 
 import jakarta.transaction.Transactional;
+import com.example.airBnbApp.exception.UnAuthorisedException;
 
 import com.example.airBnbApp.repository.HotelRepository;
 import com.example.airBnbApp.exception.ResourceNotFoundException;
@@ -34,6 +38,12 @@ public class RoomServiceImpl implements RoomService {
         Hotel hotel = hotelRepository
 			.findById(hotelId)
 			.orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : "+hotelId));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(!user.equals(hotel.getOwner())){
+			throw new UnAuthorisedException("This user does not owns this hotel with ID "+hotelId);
+		}
+
         Room room = modelMapper.map(roomDto, Room.class);
         room.setHotel(hotel);
         room = roomRepository.save(room);
@@ -53,6 +63,12 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository
             .findById(roomId)
 			.orElseThrow(() -> new ResourceNotFoundException("Room not found with ID : "+roomId));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(!user.equals(room.getHotel().getOwner())){
+			throw new UnAuthorisedException("This user does not owns this room with ID "+roomId);
+		}
+
         inventoryService.deleteAllInventories(room);
 
         roomRepository.deleteById(roomId);
@@ -65,6 +81,11 @@ public class RoomServiceImpl implements RoomService {
         Hotel hotel = hotelRepository
 			.findById(hotelId)
 			.orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : "+hotelId));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(!user.equals(hotel.getOwner())){
+			throw new UnAuthorisedException("This user does not owns this hotel with ID "+hotelId);
+		}
 
             return hotel.getRooms()
                 .stream()
