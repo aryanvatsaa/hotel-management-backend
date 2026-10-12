@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data 
 public class BookingRequest {
-    private Long HotelId;
+    private Long hotelId;
     private Long roomId;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;

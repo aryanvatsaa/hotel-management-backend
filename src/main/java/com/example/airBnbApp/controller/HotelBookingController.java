@@ -1,6 +1,7 @@
 package com.example.airBnbApp.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,5 +32,11 @@ public class HotelBookingController {
     @PostMapping("/{bookingId}/addGuests")
     public ResponseEntity<BookingDto> addGuests(@PathVariable Long bookingId, @RequestBody List<GuestDto> guestDtoList) {
         return ResponseEntity.ok(bookingService.addGuests(bookingId, guestDtoList));
+    }
+
+    @PostMapping("/{bookingId}/payments")
+    public ResponseEntity<Map<String, String>> initiatePayment(@PathVariable Long bookingId) {
+        String sessionUrl = bookingService.initiatePayments(bookingId);
+        return ResponseEntity.ok(Map.of("session url : ",sessionUrl));
     }
 }
