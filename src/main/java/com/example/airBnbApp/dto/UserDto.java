@@ -1,5 +1,9 @@
 package com.example.airBnbApp.dto;
 
+import java.time.LocalDate;
+
+import com.example.airBnbApp.entity.enums.Gender;
+
 import lombok.Data;
 
 @Data 
@@ -7,5 +11,6 @@ public class UserDto {
     private Long id;
     private String email;
     private String name;
-
+    private Gender gender;
+    private LocalDate dateOfBirth;
 }

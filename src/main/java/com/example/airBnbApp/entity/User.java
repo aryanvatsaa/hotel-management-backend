@@ -1,5 +1,6 @@
 package com.example.airBnbApp.entity;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.airBnbApp.entity.enums.Gender;
 import com.example.airBnbApp.entity.enums.Roles;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ElementCollection;
@@ -42,6 +44,11 @@ public class User implements UserDetails{
     private String password;       //ENCODE LATER WITH BCRYPT
 
     private String name;
+
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

@@ -2,6 +2,7 @@ package com.example.airBnbApp.service;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import static com.example.airBnbApp.util.AppUtils.getCurrentUser;
 
 import com.example.airBnbApp.dto.HotelDto;
 import com.example.airBnbApp.dto.RoomDto;
@@ -17,6 +18,7 @@ import com.example.airBnbApp.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
@@ -136,6 +138,14 @@ public class HotelServiceImpl implements HotelService {
 			.toList();
 			
 		return new HotelInfoDto(modelMapper.map(hotel, HotelDto.class), rooms);
+	}
+
+	@Override
+	public List<HotelDto> getAllHotels() {
+		User user = getCurrentUser();
+		List<Hotel> hotels = hotelRepository.findByOwner(user);
+
+		return hotels.stream().map((element) -> modelMapper.map(element, HotelDto.class)).collect(Collectors.toList());
 	}
 
 

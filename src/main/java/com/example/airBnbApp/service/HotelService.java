@@ -1,6 +1,9 @@
 package com.example.airBnbApp.service;
 
 
+import java.util.List;
+
+
 import com.example.airBnbApp.dto.HotelDto;
 // import com.example.airBnbApp.entity.Hotel;
 import com.example.airBnbApp.dto.HotelInfoDto;
@@ -19,4 +22,6 @@ public interface HotelService {
 
 
     HotelInfoDto getHotelInfoById(Long hotelId);
+
+    List<HotelDto> getAllHotels();
 }

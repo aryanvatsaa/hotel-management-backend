@@ -1,5 +1,7 @@
 package com.example.airBnbApp.service;
 
+import static com.example.airBnbApp.util.AppUtils.getCurrentUser;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +101,28 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository
             .findById(roomId)
 			.orElseThrow(() -> new ResourceNotFoundException("Room not found with ID : "+roomId));
+        return modelMapper.map(room, RoomDto.class);
+    }
+
+    @Override
+    @Transactional 
+    public RoomDto updateRoomById(Long hotelId, Long roomId, RoomDto roomDto) {
+		Hotel hotel = hotelRepository
+			.findById(hotelId)
+			.orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : "+hotelId));
+
+		User user = getCurrentUser();
+		if(!user.equals(hotel.getOwner())){
+			throw new UnAuthorisedException("This user does not owns this hotel with ID "+hotelId);
+		}
+
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new ResourceNotFoundException("Room not found with ID : "+roomId));
+
+        modelMapper.map(roomDto, room);
+        room.setId(roomId);
+
+        room = roomRepository.save(room);
+
         return modelMapper.map(room, RoomDto.class);
     }   
 
