@@ -1,0 +1,25 @@
+# BACKEND CONFIGURATION
+
+spring.application.name=airBnbApp
+server.port=8080
+
+# DATABASE CONFIGURATION
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/airBnb
+spring.datasource.username=postgres
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+server.servlet.context-path=/api/v1
+
+#JWT CONFIGURATION
+
+jwt.secretKey=your_jwt_secret
+
+#FRONTEND CONFIGURATION
+
+frontend.url=http://localhost:8080
+
+# STRIPE CONFIGURATION
+
+stripe.secret.key=your_stripe_secret_key
+stripe.webhook.secret=your_stripe_webhook_secret
